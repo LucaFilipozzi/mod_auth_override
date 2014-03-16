@@ -52,21 +52,33 @@ CAS\_eduPersonPrincipalName in the request headers; then the configuration
 could be:
 
 ```apache
-<Location "/secure">
-    AuthType CAS
+<IfModule mod_auth_cas.c>
     # ... other CAS directives ...
     CASValidateSAML on
+    CASAuthoritative on
     CASAttributePrefix CAS_
-    CASScrubRequestHeaders on
-    # instead of 'Require valid-user', use
-    Require cas-attribute eduPersonPrincipalName~.*
-    AuthOverride CAS_eduPersonPrincipalName
-</Location>
+</IfModule>
+
+<VirtualHost www.example.com:443>
+    <IfModule mod_auth_cas.c>
+        <Location "/secure">
+            AuthType CAS
+            CASScrubRequestHeaders on
+            CASAuthNHeader CAS_user
+            Require cas-attribute eduPersonPrincipalName~.+
+            AuthOverride CAS_eduPersonPrincipalName
+        </Location>
+    </IfModule>
+</VirtualHost>
 ```
 
 Use of the combination of directives 'CASScrubRequestHeaders' and 'Require
 cas-attribute' ensures that the header used with AuthOverride was, in fact, set
 by [mod_auth_cas][2].
+
+*PLEASE NOTE* that a recent version of [mod_auth_cas][2] is required for
+'Require cas-attribute' functionality: one that supports the 'CASAuthoritative'
+directive.
 
 Patches providing rpm or deb packaging welcome.
 

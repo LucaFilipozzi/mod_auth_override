@@ -21,19 +21,25 @@ static const char* auth_override_command_handler(cmd_parms* cmd, void* cfg, cons
 
 static int auth_override_fixups(request_rec* request)
 {
-    auth_override_config_t* config = ap_get_module_config(request->per_dir_config, &auth_override_module);
-    if (config) {
-        const char* header_val = apr_table_get(request->headers_in, config->header_key);
-        if (header_val) {
-            request->user = apr_pstrdup(request->pool, header_val);
-            return OK;
-        } else {
-            ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: header '%s' not found", config->header_key);
-        }
-    } else {
-        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: invalid configuration");
+    if (request->user == NULL) {
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: user must already be authenticated and authorized");
+        return HTTP_UNAUTHORIZED;
     }
-    return HTTP_INTERNAL_SERVER_ERROR;
+
+    auth_override_config_t* config = ap_get_module_config(request->per_dir_config, &auth_override_module);
+    if (config == NULL) {
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: invalid configuration");
+        return HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    const char* header_val = apr_table_get(request->headers_in, config->header_key);
+    if (header_val == NULL) {
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: header '%s' not found", config->header_key);
+        return HTTP_INTERNAL_SERVER_ERROR;
+    }
+
+    request->user = apr_pstrdup(request->pool, header_val);
+    return OK;
 }
 
 static void* auth_override_create_directory_config(apr_pool_t* pool, char* path) {
