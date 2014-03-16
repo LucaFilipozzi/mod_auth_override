@@ -45,7 +45,7 @@ solely to demonstrate the use of AuthOverride.
 It is assumed that the request header used with AuthOverride will be set by
 [mod_auth_cas][2].
 
-For example, suppose that he orginal value of REMOTE\_USER as set by
+For example, suppose that the orginal value of REMOTE\_USER as set by
 [mod_auth_cas][2] might be 'alice' but the value desired by the application is
 'alice@example.com' and that this desired value is available as
 CAS\_eduPersonPrincipalName in the request headers; then the configuration
@@ -54,7 +54,10 @@ could be:
 ```apache
 <Location "/secure">
     AuthType CAS
-    # ... more CAS directives ...
+    # ... other CAS directives ...
+    CASValidateSAML on
+    CASAttributePrefix CAS_
+    CASScrubRequestHeaders on
     # instead of 'Require valid-user', use
     Require cas-attribute eduPersonPrincipalName~.*
     AuthOverride CAS_eduPersonPrincipalName
