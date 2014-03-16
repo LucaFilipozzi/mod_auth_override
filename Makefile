@@ -3,7 +3,7 @@ default: compile
 
 .PHONY: clean
 clean:
-	rm -f *.la *.lo *.slo
+	rm -f *.o *.la *.lo *.slo
 	rm -rf .libs
 
 .PHONY: activate

@@ -2,7 +2,9 @@
 
 #include "httpd.h"
 #include "http_config.h"
+#include "http_request.h"
 #include "http_log.h"
+#include "apr_strings.h"
 
 module AP_MODULE_DECLARE_DATA auth_override_module;
 
@@ -12,8 +14,8 @@ typedef struct {
 
 static const char* auth_override_command_handler(cmd_parms* cmd, void* cfg, const char* arg)
 {
-    auth_override_config_t* config = (auth_override_config_t*)cfg;
-    config->header_key = (char*)apr_pstrdup(cmd->pool, arg);
+    auth_override_config_t* config = cfg;
+    config->header_key = apr_pstrdup(cmd->pool, arg);
     return NULL;
 }
 
@@ -23,7 +25,7 @@ static int auth_override_auth_checker(request_rec* request)
     if (config) {
         const char* header_val = apr_table_get(request->headers_in, config->header_key);
         if (header_val) {
-            request->user = (char*)apr_pstrdup(request->pool, header_val);
+            request->user = apr_pstrdup(request->pool, header_val);
             return OK;
         } else {
             ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: header '%s' not found", config->header_key);
@@ -33,7 +35,7 @@ static int auth_override_auth_checker(request_rec* request)
     return HTTP_UNAUTHORIZED;
 }
 
-static void auth_override_create_directory_config(apr_pool_t* pool, char* directory) {
+static void* auth_override_create_directory_config(apr_pool_t* pool, char* path) {
     auth_override_config_t* config = apr_pcalloc(pool, sizeof(auth_override_config_t));
     config->header_key = NULL;
     return config;
