@@ -34,7 +34,7 @@ REMOTE\_USER to the value of the request header, SOME\_HEADER (in this case,
 'bob').
 
 It is critical, from a security perspective, that SOME_HEADER be set by an
-AuthN or AuthZ provider such as [mod_auth_cas][3] rather than passed in by the
+AuthN or AuthZ provider such as [mod_auth_cas][2] rather than passed in by the
 client.
 
 ## notes
@@ -43,17 +43,18 @@ RequestHeaderPlus, from [mod_setenvifplus][1], is used in the example above
 solely to demonstrate the use of AuthOverride.
 
 It is assumed that the request header used with AuthOverride will be set by
-[mod_shib2][2] or [mod_auth_cas][3].
+[mod_auth_cas][2].
 
-For example, suppose the orginal value of REMOTE_USER might be 'alice' as set
-by [mod_auth_cas][3] but the desired value by the application is
-'alice@example.com' and this value is available as CAS\_eduPersonPrincipalName
-in the request headers; then the configuration could be:
+For example, suppose that he orginal value of REMOTE\_USER as set by
+[mod_auth_cas][2] might be 'alice' but the value desired by the application is
+'alice@example.com' and that this desired value is available as
+CAS\_eduPersonPrincipalName in the request headers; then the configuration
+could be:
 
 ```apache
 <Location "/secure">
     AuthType CAS
-    # ... more CAS stuff ...
+    # ... more CAS directives ...
     Require valid-user
     Require cas-attribute eduPersonPrincipalName~.*
     AuthOverride CAS_eduPersonPrincipalName
@@ -61,12 +62,11 @@ in the request headers; then the configuration could be:
 ```
 
 Use of the 'Require cas-attribute' directive helps to ensure that the header
-used with AuthOverride was, in fact, set by [mod_auth_cas][3].
+used with AuthOverride was, in fact, set by [mod_auth_cas][2].
 
 Patches providing rpm or deb packaging welcome.
 
 [0]: http://httpd.apache.org/docs/2.2/mod/mod_authn_file.html
 [1]: http://opensource.adnovum.ch/mod_setenvifplus
-[2]: http://www.internet2.edu/products-services/trust-identity-middleware/shibboleth/
-[3]: https://github.com/Jasig/mod_auth_cas
+[2]: https://github.com/Jasig/mod_auth_cas
 
