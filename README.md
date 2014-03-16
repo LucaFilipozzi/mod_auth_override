@@ -55,7 +55,7 @@ could be:
 <Location "/secure">
     AuthType CAS
     # ... more CAS directives ...
-    Require valid-user
+    # instead of 'Require valid-user', use
     Require cas-attribute eduPersonPrincipalName~.*
     AuthOverride CAS_eduPersonPrincipalName
 </Location>
