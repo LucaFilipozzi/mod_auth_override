@@ -10,7 +10,8 @@ apxs2 -c -i -a mod_auth_override.c
 
 ## configuration
 
-Where needed, add the AuthOverride directive to cause REMOTE_USER to be updated.
+Where needed, add the AuthOverride directive to cause REMOTE_USER to be
+updated.
 
 ```apache
 <Directory "/srv/www.example.com/htdocs">
@@ -26,19 +27,26 @@ Where needed, add the AuthOverride directive to cause REMOTE_USER to be updated.
 Suppose that the 'htpasswd' file contains an entry for a user 'alice'.
 
 After successful authentication (based on the standard behaviour of
-mod_authn_file), REMOTE_USER is set to 'alice'.
+[mod_authn_file][0]), REMOTE_USER is set to 'alice'.
 
-This module, mod_auth_override, implements an fixhup hook that will update
-REMOTE_USER to the value of the request header, SOME_HEADER (in this case,
+This module, mod_auth_override, implements a fixhup hook that will update
+REMOTE\_USER to the value of the request header, SOME\_HEADER (in this case,
 'bob').
+
+It is critical, from a security perspective, that the SOME_HEADER be set by the
+an AuthN or AuthZ provider such as [mod_auth_cas][3] rather than passed in by
+the client.
 
 ## notes
 
 RequestHeaderPlus, from [mod_setenvifplus][1], is used in the example above
 solely to demonstrate the use of AuthOverride.  It is assumed that the request
-header used with AuthOverride will be set by mod_shib2 or mod_auth_cas.
+header used with AuthOverride will be set by [mod_shib2][2] or [mod_auth_cas][3].
 
 Patches providing rpm or deb packaging welcome.
 
+[0]: http://httpd.apache.org/docs/2.2/mod/mod_authn_file.html
 [1]: http://opensource.adnovum.ch/mod_setenvifplus
+[2]: http://www.internet2.edu/products-services/trust-identity-middleware/shibboleth/
+[3]: https://github.com/Jasig/mod_auth_cas
 
