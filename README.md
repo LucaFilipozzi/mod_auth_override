@@ -33,11 +33,11 @@ This module, mod_auth_override, implements a fixhup hook that will update
 REMOTE\_USER to the value of the request header, SOME\_HEADER (in this case,
 'bob').
 
-It is critical, from a security perspective, that SOME_HEADER be set by an
+It is critical, from a security perspective, that SOME\_HEADER be set by an
 AuthN or AuthZ provider such as [mod_auth_cas][2] rather than passed in by the
 client.
 
-## notes
+## a CAS example
 
 RequestHeaderPlus, from [mod_setenvifplus][1], is used in the example above
 solely to demonstrate the use of AuthOverride.
@@ -46,8 +46,8 @@ It is assumed that the request header used with AuthOverride will be set by
 [mod_auth_cas][2].
 
 For example, suppose that the orginal value of REMOTE\_USER as set by
-[mod_auth_cas][2] might be 'alice' but the value desired by the application is
-'alice@example.com' and that this desired value is available as
+[mod_auth_cas][2] might be 'alice' but that the value desired by the
+application is 'alice@example.com' and that this desired value is available as
 CAS\_eduPersonPrincipalName in the request headers; then the configuration
 could be:
 
@@ -64,8 +64,9 @@ could be:
 </Location>
 ```
 
-Use of the 'Require cas-attribute' directive helps to ensure that the header
-used with AuthOverride was, in fact, set by [mod_auth_cas][2].
+Use of the combination of directives 'CASScrubRequestHeaders' and 'Require
+cas-attribute' ensures that the header used with AuthOverride was, in fact, set
+by [mod_auth_cas][2].
 
 Patches providing rpm or deb packaging welcome.
 
