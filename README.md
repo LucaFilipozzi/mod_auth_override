@@ -27,7 +27,7 @@ updated.
 Suppose that the 'htpasswd' file contains an entry for a user 'alice'.
 
 After successful authentication (based on the standard behaviour of
-[mod_authn_file][0]), REMOTE_USER is set to 'alice'.
+[mod_authn_file][0]), REMOTE\_USER is set to 'alice'.
 
 This module, mod_auth_override, implements a fixhup hook that will update
 REMOTE\_USER to the value of the request header, SOME\_HEADER (in this case,
@@ -40,8 +40,23 @@ the client.
 ## notes
 
 RequestHeaderPlus, from [mod_setenvifplus][1], is used in the example above
-solely to demonstrate the use of AuthOverride.  It is assumed that the request
-header used with AuthOverride will be set by [mod_shib2][2] or [mod_auth_cas][3].
+solely to demonstrate the use of AuthOverride.
+
+It is assumed that the request header used with AuthOverride will be set by
+[mod_shib2][2] or [mod_auth_cas][3].
+
+For example, the orginal value of REMOTE_USER might be 'alice' as set by
+[mod_auth_cas][3] but the desired value by the application is
+'alice@example.com' and this value is available as CAS\_eduPersonPrincipalName:
+
+```apache
+<Location "/secure">
+    AuthType CAS
+    # ... more CAS stuff ...
+    Require valid-user
+    AuthOverride CAS_eduPersonPrincipalName
+</Location>
+```
 
 Patches providing rpm or deb packaging welcome.
 
