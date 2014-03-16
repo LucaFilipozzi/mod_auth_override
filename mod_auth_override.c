@@ -49,7 +49,7 @@ static const command_rec auth_override_module_commands[] = {
 
 static void auth_override_register_module_hooks(apr_pool_t* pool)
 {
-    ap_hook_fixups(auth_override_fixups, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_fixups(auth_override_fixups, NULL, NULL, APR_HOOK_LAST);
 }
 
 module AP_MODULE_DECLARE_DATA auth_override_module = {
