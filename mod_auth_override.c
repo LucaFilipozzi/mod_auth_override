@@ -19,7 +19,7 @@ static const char* auth_override_command_handler(cmd_parms* cmd, void* cfg, cons
     return NULL;
 }
 
-static int auth_override_auth_checker(request_rec* request)
+static int auth_override_fixups(request_rec* request)
 {
     auth_override_config_t* config = ap_get_module_config(request->per_dir_config, &auth_override_module);
     if (config) {
@@ -29,10 +29,11 @@ static int auth_override_auth_checker(request_rec* request)
             return OK;
         } else {
             ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: header '%s' not found", config->header_key);
-            return HTTP_INTERNAL_SERVER_ERROR;
         }
+    } else {
+        ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: invalid configuration");
     }
-    return HTTP_UNAUTHORIZED;
+    return HTTP_INTERNAL_SERVER_ERROR;
 }
 
 static void* auth_override_create_directory_config(apr_pool_t* pool, char* path) {
@@ -48,7 +49,7 @@ static const command_rec auth_override_module_commands[] = {
 
 static void auth_override_register_module_hooks(apr_pool_t* pool)
 {
-    ap_hook_auth_checker(auth_override_auth_checker, NULL, NULL, APR_HOOK_MIDDLE);
+    ap_hook_fixups(auth_override_fixups, NULL, NULL, APR_HOOK_MIDDLE);
 }
 
 module AP_MODULE_DECLARE_DATA auth_override_module = {

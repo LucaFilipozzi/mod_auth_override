@@ -5,7 +5,7 @@
 Ensure that apxs (Redhat) / apxs2 (Debian) is installed.
 
 ```bash
-apsx2 -c -i -a mod_auth_override.c
+apxs2 -c -i -a mod_auth_override.c
 ```
 
 ## configuration
