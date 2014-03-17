@@ -1,3 +1,7 @@
+APXS:=apxs
+DESTDIR:=./install
+LIBEXECDIR:=$(shell ${APXS} -q LIBEXECDIR)
+
 .PHONY: default
 default: compile
 
@@ -5,15 +9,12 @@ default: compile
 clean:
 	rm -f *.o *.la *.lo *.slo
 	rm -rf .libs
-
-.PHONY: activate
-activate:
-	apxs2 -c -i -a mod_auth_override.c
+	-case '$(DESTDIR)' in ''|/*) ;; *) rm -rf $(DESTDIR) ;; esac
 
 .PHONY: install
 install:
-	apxs2 -c -i mod_auth_override.c
+	install -D .libs/mod_auth_override.so ${DESTDIR}${LIBEXECDIR}/mod_auth_override.so
 
 .PHONY: compile
 compile:
-	apxs2 -c mod_auth_override.c
+	${APXS} -c mod_auth_override.c
