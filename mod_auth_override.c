@@ -12,15 +12,13 @@ typedef struct {
     char* header_key;
 } auth_override_config_t;
 
-static const char* auth_override_command_handler(cmd_parms* cmd, void* cfg, const char* arg)
-{
+static const char* auth_override_command_handler(cmd_parms* cmd, void* cfg, const char* arg) {
     auth_override_config_t* config = cfg;
     config->header_key = apr_pstrdup(cmd->pool, arg);
     return NULL;
 }
 
-static int auth_override_fixups(request_rec* request)
-{
+static int auth_override_fixups(request_rec* request) {
     if (request->user == NULL) {
         ap_log_rerror(APLOG_MARK, APLOG_ERR, 0, request, "mod_auth_override: user must already be authenticated and authorized");
         return HTTP_UNAUTHORIZED;
@@ -53,8 +51,7 @@ static const command_rec auth_override_module_commands[] = {
     {NULL}
 };
 
-static void auth_override_register_module_hooks(apr_pool_t* pool)
-{
+static void auth_override_register_module_hooks(apr_pool_t* pool) {
     ap_hook_fixups(auth_override_fixups, NULL, NULL, APR_HOOK_LAST);
 }
 

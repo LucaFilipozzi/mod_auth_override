@@ -46,10 +46,10 @@ It is assumed that the request header used with AuthOverride will be set by
 [mod_auth_cas][2].
 
 For example, suppose that the orginal value of REMOTE\_USER as set by
-[mod_auth_cas][2] might be 'alice' but that the value desired by the
-application is 'alice@example.com' and that this desired value is available as
-CAS\_eduPersonPrincipalName in the request headers; then the configuration
-could be:
+[mod_auth_cas][2] is 'alice' but that the value desired by the application is
+'alice@example.com' and that this desired value is available from the
+CAS\_eduPersonPrincipalName header in the request; then the configuration could
+be:
 
 ```apache
 <IfModule mod_auth_cas.c>
@@ -60,6 +60,7 @@ could be:
 </IfModule>
 
 <VirtualHost www.example.com:443>
+    # ... other VirtualHost directives ...
     <IfModule mod_auth_cas.c>
         <Location "/secure">
             AuthType CAS
@@ -73,12 +74,12 @@ could be:
 ```
 
 Use of the combination of directives 'CASScrubRequestHeaders' and 'Require
-cas-attribute' ensures that the header used with AuthOverride was, in fact, set
+cas-attribute' ensures that the header used with AuthOverride is, in fact, set
 by [mod_auth_cas][2].
 
-*PLEASE NOTE* that a recent version of [mod_auth_cas][2] is required for
-'Require cas-attribute' functionality: one that supports the 'CASAuthoritative'
-directive.
+**PLEASE NOTE** that a recent version of [mod_auth_cas][2] is required for
+'Require cas-attribute' functionality: specificall, one that supports the
+'CASAuthoritative' directive.
 
 Patches providing rpm or deb packaging welcome.
 
