@@ -78,7 +78,7 @@ cas-attribute' ensures that the header used with AuthOverride is, in fact, set
 by [mod_auth_cas][2].
 
 **PLEASE NOTE** that a recent version of [mod_auth_cas][2] is required for
-'Require cas-attribute' functionality: specificall, one that supports the
+'Require cas-attribute' functionality: specifically, one that supports the
 'CASAuthoritative' directive.
 
 Patches providing rpm or deb packaging welcome.
