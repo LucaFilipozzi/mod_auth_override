@@ -1,6 +1,6 @@
 # mod_auth_override
 
-## installation
+## Installation
 
 Ensure that apxs (Redhat) / apxs2 (Debian) is installed.
 
@@ -8,7 +8,7 @@ Ensure that apxs (Redhat) / apxs2 (Debian) is installed.
 apxs2 -c -i -a mod_auth_override.c
 ```
 
-## configuration
+## Configuration
 
 Where needed, add the AuthOverride directive to cause REMOTE_USER to be
 updated.
@@ -37,7 +37,7 @@ It is critical, from a security perspective, that SOME\_HEADER be set by an
 AuthN or AuthZ provider such as [mod_auth_cas][2] rather than passed in by the
 client.
 
-## a CAS example
+## A CAS example
 
 RequestHeaderPlus, from [mod_setenvifplus][1], is used in the example above
 solely to demonstrate the use of AuthOverride.
